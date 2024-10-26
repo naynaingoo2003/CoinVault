@@ -3,9 +3,23 @@ import { useParams, Link } from "react-router-dom";
 import { fetchAssetHistory, fetchTopAssets, formatPrice, formatMarketCap } from "@/lib/api";
 import { PriceChart } from "@/components/PriceChart";
 import { ArrowLeft, Loader2 } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState } from "react";
+
+const TIME_RANGES = {
+  "1H": "h1",
+  "4H": "h1",
+  "12H": "h1",
+  "24H": "h1",
+  "1W": "d1",
+  "ALL": "d1"
+} as const;
+
+type TimeRange = keyof typeof TIME_RANGES;
 
 const AssetDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const [timeRange, setTimeRange] = useState<TimeRange>("24H");
 
   const { data: assets } = useQuery({
     queryKey: ["assets"],
@@ -13,8 +27,8 @@ const AssetDetail = () => {
   });
 
   const { data: history, isLoading: isLoadingHistory } = useQuery({
-    queryKey: ["assetHistory", id],
-    queryFn: () => fetchAssetHistory(id!),
+    queryKey: ["assetHistory", id, timeRange],
+    queryFn: () => fetchAssetHistory(id!, TIME_RANGES[timeRange]),
     enabled: !!id,
   });
 
@@ -27,6 +41,20 @@ const AssetDetail = () => {
       </div>
     );
   }
+
+  const filterHistoryByTimeRange = (data: any[]) => {
+    if (!data) return [];
+    const now = Date.now();
+    const ranges = {
+      "1H": 60 * 60 * 1000,
+      "4H": 4 * 60 * 60 * 1000,
+      "12H": 12 * 60 * 60 * 1000,
+      "24H": 24 * 60 * 60 * 1000,
+      "1W": 7 * 24 * 60 * 60 * 1000,
+      "ALL": Infinity
+    };
+    return data.filter(item => (now - item.time) <= ranges[timeRange]);
+  };
 
   return (
     <div className="container py-8 max-w-6xl">
@@ -63,12 +91,26 @@ const AssetDetail = () => {
         </div>
       </div>
 
+      <Tabs defaultValue="24H" className="mb-4" onValueChange={(value) => setTimeRange(value as TimeRange)}>
+        <TabsList className="brutal-border bg-white dark:bg-black">
+          {Object.keys(TIME_RANGES).map((range) => (
+            <TabsTrigger
+              key={range}
+              value={range}
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+            >
+              {range}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
+
       {isLoadingHistory ? (
         <div className="h-[400px] brutal-border bg-white dark:bg-black flex items-center justify-center">
           <Loader2 className="w-8 h-8 animate-spin" />
         </div>
       ) : (
-        history && <PriceChart data={history} />
+        history && <PriceChart data={filterHistoryByTimeRange(history)} />
       )}
     </div>
   );

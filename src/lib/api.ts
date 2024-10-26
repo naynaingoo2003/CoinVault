@@ -28,10 +28,10 @@ export const fetchTopAssets = async (): Promise<Asset[]> => {
   }
 };
 
-export const fetchAssetHistory = async (id: string): Promise<AssetHistory[]> => {
+export const fetchAssetHistory = async (id: string, interval: string = "h1"): Promise<AssetHistory[]> => {
   try {
     const response = await fetch(
-      `${COINCAP_API_BASE}/assets/${id}/history?interval=h1`
+      `${COINCAP_API_BASE}/assets/${id}/history?interval=${interval}`
     );
     const data = await response.json();
     return data.data;
