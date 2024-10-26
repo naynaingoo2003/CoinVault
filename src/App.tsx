@@ -12,18 +12,20 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider defaultTheme="system" enableSystem>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/asset/:id" element={<AssetDetail />} />
-          </Routes>
-          <ThemeToggle />
-        </BrowserRouter>
-      </TooltipProvider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <div className="min-h-screen bg-background transition-colors">
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/asset/:id" element={<AssetDetail />} />
+            </Routes>
+            <ThemeToggle />
+          </BrowserRouter>
+        </TooltipProvider>
+      </div>
     </ThemeProvider>
   </QueryClientProvider>
 );
