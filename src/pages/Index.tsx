@@ -20,8 +20,8 @@ const Index = () => {
 
   return (
     <div className="container py-8 max-w-6xl">
-      <h1 className="text-4xl font-black mb-8 brutal-border inline-block px-4 py-2 bg-white">
-        Crypto Assets
+      <h1 className="text-4xl font-black mb-8 brutal-border inline-block px-4 py-2 bg-white dark:bg-black dark:text-white">
+        CoinVault
       </h1>
       <div className="grid gap-4 md:grid-cols-2">
         {assets?.map((asset) => (
