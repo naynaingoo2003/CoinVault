@@ -30,12 +30,12 @@ const AssetDetail = () => {
 
   return (
     <div className="container py-8 max-w-6xl">
-      <Link to="/" className="inline-flex items-center gap-2 brutal-border px-4 py-2 bg-white mb-8">
+      <Link to="/" className="inline-flex items-center gap-2 brutal-border px-4 py-2 bg-white dark:bg-black dark:text-white mb-8">
         <ArrowLeft size={20} />
         Back to Assets
       </Link>
       
-      <div className="brutal-border bg-white p-6 mb-8">
+      <div className="brutal-border bg-white dark:bg-black dark:text-white p-6 mb-8">
         <div className="flex justify-between items-start mb-4">
           <div>
             <h1 className="text-4xl font-black">{asset.name}</h1>
@@ -50,11 +50,13 @@ const AssetDetail = () => {
         </div>
         
         <div className="flex gap-4 text-sm">
-          <div className="brutal-border px-4 py-2 bg-primary/10">
+          <div className="brutal-border px-4 py-2 bg-primary/10 dark:bg-primary/20">
             Rank #{asset.rank}
           </div>
           <div className={`brutal-border px-4 py-2 ${
-            parseFloat(asset.changePercent24Hr) >= 0 ? 'bg-green-100' : 'bg-red-100'
+            parseFloat(asset.changePercent24Hr) >= 0 
+              ? 'bg-green-100 dark:bg-green-900' 
+              : 'bg-red-100 dark:bg-red-900'
           }`}>
             24h: {parseFloat(asset.changePercent24Hr).toFixed(2)}%
           </div>
@@ -62,7 +64,7 @@ const AssetDetail = () => {
       </div>
 
       {isLoadingHistory ? (
-        <div className="h-[400px] brutal-border bg-white flex items-center justify-center">
+        <div className="h-[400px] brutal-border bg-white dark:bg-black flex items-center justify-center">
           <Loader2 className="w-8 h-8 animate-spin" />
         </div>
       ) : (
